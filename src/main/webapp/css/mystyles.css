@@ -1,0 +1,42 @@
+.login{
+    background-color: #389be7;
+}
+.form-control{
+    /*padding: 0px;*/
+    height: 40px;
+    font-size: 14px;
+    /*border-radius: 0px;;*/
+    border: 1px solid #006666;
+    
+}.form-group{
+   
+    margin: 4px auto;
+}
+.login_frame{
+    margin-top: 20px;
+}
+#label{
+    font-size: 14px;
+}
+#save{
+    background-color: #c838e7;
+    margin-top: 10px;
+}
+h2{
+    margin-left: 30px;
+}
+.data_table tr td, #data_table tr td,#data_table tr th{
+    padding: 5px;
+    font-size: 14px;
+}
+table{
+    background-color: #fff;
+}
+
+#btn_login{
+    float: left;
+}
+
+.dodo{
+    color: #2d0733;
+}
