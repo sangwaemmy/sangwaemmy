@@ -33,7 +33,7 @@ public class Mdl_entry {
     @Column(name = "id", nullable = false)
     private long id;
 
-    @Size(min = 1, max = 20, message = " date_time should not be empty, null and or length exceed 30")
+    @Size(min = 1, max = 20, message = " date_time should not be empty, null and or length exceed 20")
     @Column(name = "date_time", length = 20, nullable = false)
     private String date_time;
 

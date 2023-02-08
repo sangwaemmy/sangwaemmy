@@ -6,6 +6,7 @@ package com.rusumo.controller;
 
 import com.rusumo.models.Mdl_client;
 import com.rusumo.models.Mdl_entry;
+import com.rusumo.print.controller.Commons;
 import com.rusumo.repository.ClientRepository;
 import com.rusumo.repository.EntryRepository;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +32,7 @@ import org.springframework.web.client.ResourceAccessException;
 @RestController
 @RequestMapping("/rusumo_warehouses/api/entry")
 @CrossOrigin("*")
-public class EntryController {
+public class EntryController extends Commons{
 
     @Autowired
     EntryRepository entryRepository;
@@ -44,6 +45,7 @@ public class EntryController {
     @PostMapping("/add/{clientId}")
     public ResponseEntity<Mdl_entry> createUser(@RequestBody @Valid Mdl_entry mdl_entry, @PathVariable(value = "clientId") long clientId) {
         Mdl_client mdl_client = clientRepository.findById(clientId).orElseThrow(() -> new ResourceAccessException("Id Not found"));
+        mdl_client.setDateTime(new Commons().getCurrentDateTime());
         mdl_entry.setMdl_client(mdl_client);
         return new ResponseEntity<>(entryRepository.save(mdl_entry), HttpStatus.CREATED);
     }
