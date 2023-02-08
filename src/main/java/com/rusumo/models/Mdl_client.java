@@ -14,48 +14,44 @@ import java.io.Serializable;
 @Entity
 @Table(name = "client")
 @Data
-
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mdl_client implements Serializable {
 
- @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-  
-    @Size(min = 1, max = 20, message = " client_id should not be empty, null and or length exceed 30")
-    @Column(name = "client_id", length = 20, nullable = false)
-    private Integer client_id;
-  
     @Size(min = 1, max = 20, message = " name should not be empty, null and or length exceed 30")
     @Column(name = "name", length = 20, nullable = false)
     private String name;
-  
+
     @Size(min = 1, max = 20, message = " surname should not be empty, null and or length exceed 30")
     @Column(name = "surname", length = 20, nullable = false)
     private String surname;
-  
+
     @Size(min = 1, max = 20, message = " telephone should not be empty, null and or length exceed 30")
     @Column(name = "telephone", length = 20, nullable = false)
     private String telephone;
-  
+
     @Size(min = 1, max = 20, message = " tin should not be empty, null and or length exceed 30")
     @Column(name = "tin", length = 20, nullable = false)
     private String tin;
-  
+
     @Size(min = 1, max = 20, message = " address should not be empty, null and or length exceed 30")
     @Column(name = "address", length = 20, nullable = false)
     private String address;
-  
+
     @Size(min = 1, max = 20, message = " dateTime should not be empty, null and or length exceed 30")
     @Column(name = "dateTime", length = 20, nullable = false)
     private String dateTime;
-  
-    @Size(min = 1, max = 20, message = " account should not be empty, null and or length exceed 30")
-    @Column(name = "account", length = 20, nullable = false)
-    private Integer account;
+    
+    @Size(min = 1, max = 100, message = " account_id should not be empty, null and or length exceed 30")
+    @Column(name = "account_id", length = 100, nullable = false)
+    private String account_id;
 
-    public Mdl_client() {
-    }
+
+ 
+   
 
 }

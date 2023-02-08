@@ -8,11 +8,11 @@
         <version>2.7.9-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.jpa-one-to-one-demo</groupId>
-    <artifactId>jpa-one-to-one-demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <groupId>rusumo</groupId>
+    <artifactId>warehouse</artifactId>
+    <version>v.0.1</version>
     <name>warehouse_rusumo</name>
-    <description>Demo project for Spring Boot</description>
+    <description>System to manage warehouse operations </description>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -46,11 +46,19 @@
             <artifactId>springfox-boot-starter</artifactId>
             <version>3.0.0</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <type>jar</type>
         </dependency>  
+        
+        <!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>

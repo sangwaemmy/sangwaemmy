@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author SANGWA Emmanuel code [CODEGURU - info@codeguru.com]
  */
 @RestController
-@RequestMapping("/rusumo_warehouses/api/client")
+@RequestMapping("/rusumo_warehouses/api/client")@CrossOrigin("*")
 public class ClientController {
 
     @Autowired
@@ -53,14 +54,13 @@ public class ClientController {
     public ResponseEntity<Mdl_client> updateStructure(@PathVariable(value = "id") long id, @RequestBody Mdl_client mdl_client) {
         Mdl_client mdl_client1 = clientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Structure not found"));
-        mdl_client1.setClient_id(mdl_client.getClient_id());
+        mdl_client1.setId(mdl_client.getId());
         mdl_client1.setName(mdl_client.getName());
         mdl_client1.setSurname(mdl_client.getSurname());
         mdl_client1.setTelephone(mdl_client.getTelephone());
         mdl_client1.setTin(mdl_client.getTin());
         mdl_client1.setAddress(mdl_client.getAddress());
         mdl_client1.setDateTime(mdl_client.getDateTime());
-        mdl_client1.setAccount(mdl_client.getAccount());
         return new ResponseEntity<>(clientRepository.save(mdl_client), HttpStatus.OK);
 
     }

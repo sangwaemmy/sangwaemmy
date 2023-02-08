@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rusumo_warehouses/api/receipt")
+@CrossOrigin("*")
 public class ReceiptController {
 
     @Autowired
@@ -53,7 +55,7 @@ public class ReceiptController {
     public ResponseEntity<Mdl_receipt> updateStructure(@PathVariable(value = "id") long id, @RequestBody Mdl_receipt mdl_receipt) {
         Mdl_receipt mdl_receipt1 = receiptRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Structure not found"));
-        mdl_receipt1.setReceipt_id(mdl_receipt.getReceipt_id());
+        mdl_receipt1.setId(mdl_receipt.getId());
         mdl_receipt1.setDate_time(mdl_receipt.getDate_time());
         mdl_receipt1.setInvoice(mdl_receipt.getInvoice());
         return new ResponseEntity<>(receiptRepository.save(mdl_receipt), HttpStatus.OK);

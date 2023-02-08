@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rusumo_warehouses/api/profile")
+@CrossOrigin("*")
 public class ProfileController {
 
     @Autowired
@@ -53,7 +55,7 @@ public class ProfileController {
     public ResponseEntity<Mdl_profile> updateStructure(@PathVariable(value = "id") long id, @RequestBody Mdl_profile mdl_profile) {
         Mdl_profile mdl_profile1 = profileRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Structure not found"));
-        mdl_profile1.setProfile_id(mdl_profile.getProfile_id());
+        mdl_profile1.setId(mdl_profile.getId());
         mdl_profile1.setName(mdl_profile.getName());
         mdl_profile1.setSurname(mdl_profile.getSurname());
         mdl_profile1.setDate_birth(mdl_profile.getDate_birth());

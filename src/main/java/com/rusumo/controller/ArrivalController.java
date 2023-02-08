@@ -1,16 +1,21 @@
- 
 package com.rusumo.controller;
 
 import com.rusumo.exception.ResourceNotFoundException;
 import com.rusumo.models.Mdl_arrival;
 import com.rusumo.DTO.MultipleArrivals;
-import com.rusumo.repository.ArrivalRepository;import io.swagger.annotations.ApiOperation;
+import com.rusumo.models.Mdl_client;
+import com.rusumo.models.Mdl_entry;
+import com.rusumo.repository.ArrivalRepository;
+import com.rusumo.repository.ClientRepository;
+import com.rusumo.repository.EntryRepository;
+import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.ResourceAccessException;
 
 /**
  *
@@ -26,14 +32,21 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rusumo_warehouses/api/arrival")
+@CrossOrigin("*")
 public class ArrivalController {
-
+    
     @Autowired
     ArrivalRepository arrivalRepository;
-
+    
+    @Autowired
+    EntryRepository entryRepository;
+    
+    @Autowired
+    ClientRepository clientRepository;
+    
     @ApiOperation("Getting all the Arrival only")
     @GetMapping("/")
-    public  ResponseEntity<List<Mdl_arrival>> getAll() {
+    public ResponseEntity<List<Mdl_arrival>> getAll() {
         List<Mdl_arrival> struc = new ArrayList<>();
         arrivalRepository.findAll().forEach(struc::add);
         if (struc.isEmpty()) {
@@ -41,43 +54,47 @@ public class ArrivalController {
         }
         return new ResponseEntity<>(struc, HttpStatus.OK);
     }
-    @ApiOperation("Creating a structure")
-    @PostMapping("/")
-    public ResponseEntity<Mdl_arrival> createStructure(@RequestBody @Valid Mdl_arrival mdl_arrival) {
+    
+    @ApiOperation("Creating an arrival notice")
+    @PostMapping("/{clientId}/{entryId}")
+    public ResponseEntity<Mdl_arrival> createStructure(@RequestBody @Valid Mdl_arrival mdl_arrival,
+            @PathVariable(value = "clientId") Long clientId, @PathVariable(value = "entryId") long entryId) {
+        Mdl_client mdl_client = clientRepository.findById(clientId).orElseThrow(() -> new ResourceAccessException("Client with Id Not found: "+clientId));
+        Mdl_entry mdl_entry = entryRepository.findById(entryId).orElseThrow(() -> new ResourceAccessException(" Entry no Not found"));
+        mdl_arrival.setMdl_client(mdl_client);
+        mdl_arrival.setMdl_entry(mdl_entry);
         return new ResponseEntity<>(arrivalRepository.save(mdl_arrival), HttpStatus.CREATED);
     }
-
-
-    @PutMapping("/{id}")
+    
+    @PutMapping("/{id}/{entry_no}/{client_no}")
     @ApiOperation(value = "Updating  a single Structure")
-    public ResponseEntity<Mdl_arrival> updateStructure(@PathVariable(value = "id") long id, @RequestBody Mdl_arrival mdl_arrival) {
-        Mdl_arrival mdl_arrival1 = arrivalRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Structure not found"));
-        mdl_arrival1.setArrival_id(mdl_arrival.getArrival_id());
-        mdl_arrival1.setDate_time(mdl_arrival.getDate_time());
-        mdl_arrival1.setYear(mdl_arrival.getYear());
-        mdl_arrival1.setPlate_no(mdl_arrival.getPlate_no());
-        mdl_arrival1.setDdcom(mdl_arrival.getDdcom());
-        mdl_arrival1.setCountry(mdl_arrival.getCountry());
-        mdl_arrival1.setStatus(mdl_arrival.getStatus());
-        mdl_arrival1.setStat_paid(mdl_arrival.getStat_paid());
-        mdl_arrival1.setClient_id(mdl_arrival.getClient_id());
-        mdl_arrival1.setAccount(mdl_arrival.getAccount());
-        mdl_arrival1.setStat_del(mdl_arrival.getStat_del());
-        mdl_arrival1.setDescripiion(mdl_arrival.getDescripiion());
+    public ResponseEntity<Mdl_arrival> updateStructure(@PathVariable(value = "id") long id,
+            @PathVariable(value = "entry_no") long entry_no, @PathVariable(value = "client_no") long client_no,
+            @RequestBody Mdl_arrival mdl_arrival
+    ) {
+        //find the entryNo
+        Mdl_entry mdl_entry = entryRepository.findById(entry_no).orElseThrow(() -> new ResourceAccessException("Entry Not found"));
+        Mdl_client mdl_client = clientRepository.findById(client_no).orElseThrow(() -> new ResourceAccessException("Client Not found"));
+        Mdl_arrival mdl_arrival1 = arrivalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Arrival not found"));
+        mdl_arrival1.setId(mdl_arrival.getId());
+        mdl_arrival1.setMdl_entry(mdl_entry);
+        mdl_arrival1.setMdl_client(mdl_client);
+        
         return new ResponseEntity<>(arrivalRepository.save(mdl_arrival), HttpStatus.OK);
-
+        
     }
-
+    
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteArrival(@PathVariable("id") long id) {
+    public ResponseEntity<HttpStatus> deleteArrival(@PathVariable("id") long id
+    ) {
         arrivalRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 //    Adding more items at the same time
     @PostMapping("/multiarrival")
-    public ResponseEntity<String> multiplearrivals(@RequestBody MultipleArrivals multipleArrivals) {
+    public ResponseEntity<String> multiplearrivals(@RequestBody MultipleArrivals multipleArrivals
+    ) {
         List<Mdl_arrival> arrivalsList = multipleArrivals.getMultiArrivals();
         try {
             for (Mdl_arrival mdl_arrival : arrivalsList) {
@@ -86,9 +103,9 @@ public class ArrivalController {
             ResponseEntity<String> responseEntity = new ResponseEntity<>("Saved", HttpStatus.OK);
             return responseEntity;
         } catch (Exception e) {
-            System.out.println("Error "  + e.toString());
+            System.out.println("Error " + e.toString());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
+    
 }

@@ -14,24 +14,26 @@ import java.io.Serializable;
 @Entity
 @Table(name = "exit_note")
 @Data
-
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mdl_exit_note implements Serializable {
 
- @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-  
-    @Size(min = 1, max = 20, message = " exit_note_id should not be empty, null and or length exceed 30")
-    @Column(name = "exit_note_id", length = 20, nullable = false)
-    private Integer exit_note_id;
-  
     @Size(min = 1, max = 20, message = " receipt should not be empty, null and or length exceed 30")
     @Column(name = "receipt", length = 20, nullable = false)
     private Integer receipt;
 
-    public Mdl_exit_note() {
-    }
+    @Size(min = 1, max = 100, message = " account_id should not be empty, null and or length exceed 30")
+    @Column(name = "account_id", length = 100, nullable = false)
+    private String account_id;
 
+
+//
+    @ManyToOne
+    @JoinColumn(name = "rec_exit")
+    private Mdl_receipt mdl_receipt;
+  
 }

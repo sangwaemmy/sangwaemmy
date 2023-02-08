@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author SANGWA Emmanuel code [CODEGURU - info@codeguru.com]
  */
 @RestController
-@RequestMapping("/rusumo_warehouses/api/exit_note")
+@RequestMapping("/rusumo_warehouses/api/exit_note")@CrossOrigin("*")
 public class Exit_noteController {
 
     @Autowired
@@ -53,7 +54,7 @@ public class Exit_noteController {
     public ResponseEntity<Mdl_exit_note> updateStructure(@PathVariable(value = "id") long id, @RequestBody Mdl_exit_note mdl_exit_note) {
         Mdl_exit_note mdl_exit_note1 = exit_noteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Structure not found"));
-        mdl_exit_note1.setExit_note_id(mdl_exit_note.getExit_note_id());
+        mdl_exit_note1.setId(mdl_exit_note.getId());
         mdl_exit_note1.setReceipt(mdl_exit_note.getReceipt());
         return new ResponseEntity<>(exit_noteRepository.save(mdl_exit_note), HttpStatus.OK);
 

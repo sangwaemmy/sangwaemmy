@@ -15,23 +15,18 @@ import java.io.Serializable;
 @Table(name = "account_category")
 @Data
 
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mdl_account_category implements Serializable {
 
- @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-  
-    @Size(min = 1, max = 20, message = " account_category_id should not be empty, null and or length exceed 30")
-    @Column(name = "account_category_id", length = 20, nullable = false)
-    private Integer account_category_id;
-  
     @Size(min = 1, max = 20, message = " name should not be empty, null and or length exceed 30")
     @Column(name = "name", length = 20, nullable = false)
     private String name;
 
-    public Mdl_account_category() {
-    }
+    
 
 }
