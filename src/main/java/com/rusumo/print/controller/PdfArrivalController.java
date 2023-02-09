@@ -31,7 +31,7 @@ public class PdfArrivalController {
 
     @GetMapping("/arrival/{entryId}")
     @ApiOperation(value = "Retrieve Arrival by an entry number")
-    public List<Mdl_tallying> findarrivalByTin(@PathVariable(name = "entryId") String entryId) {
+    public List<Mdl_tallying> findarrivalByTin(@PathVariable(value = "entryId") long entryId) {
         List<Mdl_tallying> Arrival = tallyingRepository.findArrivalByEntry(entryId);
         return Arrival;
     }
