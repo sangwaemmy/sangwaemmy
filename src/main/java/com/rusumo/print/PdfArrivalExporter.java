@@ -4,6 +4,7 @@
  */
 package com.rusumo.print;
 
+import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.PageSize;
@@ -12,25 +13,24 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import com.lowagie.text.Document;
-import com.rusumo.models.Mdl_entry;
+import com.rusumo.models.Mdl_tallying;
 import com.rusumo.print.controller.Commons;
 import java.awt.Color;
-import java.awt.Font;
 import java.io.IOException;
 import java.util.List;
+import static java.util.Map.entry;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author SANGWA Emmanuel code [CODEGURU - info@codeguru.com]
  */
-public class EntryPdfExporter extends Commons {
+public class PdfArrivalExporter extends Commons {
 
-    private Mdl_entry entry;
+    private List<Mdl_tallying> arrival;// we can call it anythign the imprtant is that it retrieves the: tallying->arrival->entry->client
 
-    public EntryPdfExporter(Mdl_entry listUsers) {
-        this.entry = listUsers;
+    public PdfArrivalExporter(List<Mdl_tallying> arrival) {
+        this.arrival = arrival;
     }
 
     private void writeTableHeader(PdfPTable table) {
@@ -40,22 +40,25 @@ public class EntryPdfExporter extends Commons {
 
         com.lowagie.text.Font font = FontFactory.getFont(FontFactory.HELVETICA);
         font.setColor(Color.WHITE);
-        cell.setPhrase(new Phrase("Entry ID", font));
+        cell.setPhrase(new Phrase("Item", font));
         table.addCell(cell);
-        cell.setPhrase(new Phrase("Client", font));
+        cell.setPhrase(new Phrase("Quantity", font));
         table.addCell(cell);
-        cell.setPhrase(new Phrase("Plate No", font));
+        cell.setPhrase(new Phrase("Weight", font));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Description", font));
         table.addCell(cell);
 
     }
 
     private void writeTableData(PdfPTable table) {
-//        for (Mdl_entry entry : listAccounts) {    
-        table.addCell(String.valueOf(entry.getId()));
-        table.addCell(entry.getMdl_client().getName() + " " + entry.getMdl_client().getSurname());
-        table.addCell(entry.getPlate_no());
-
-//        }
+        for (Mdl_tallying arriv : arrival) {
+            table.addCell(String.valueOf(arriv.getId()));
+            table.addCell(arriv.getItem_name());
+            table.addCell(arriv.getQuantity());
+            table.addCell(arriv.getWeight());
+            table.addCell(arriv.getDescription());
+        }
     }
 
     public void export(HttpServletResponse response) throws DocumentException, IOException {
@@ -72,14 +75,14 @@ public class EntryPdfExporter extends Commons {
         datePar.setAlignment(Paragraph.ALIGN_RIGHT);
         datePar.setFont(date_font);
         document.add(datePar);
-        
-        Paragraph p = new Paragraph("BON D'ENTRE AU PARKING AU " + new Commons().getCurrentDateTime(), font);
+
+        Paragraph p = new Paragraph("AVIS D'ARRIVE " + new Commons().getCurrentDateTime(), font);
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
 
-        PdfPTable table = new PdfPTable(3);
+        PdfPTable table = new PdfPTable(4);
         table.setWidthPercentage(100f);
-        table.setWidths(new float[]{1.5f, 3.5f, 3.0f});
+        table.setWidths(new float[]{1.5f, 3.5f, 3.0f, 3.0f});
         table.setSpacingBefore(10);
         writeTableHeader(table);
         writeTableData(table);

@@ -55,7 +55,6 @@ public class AccountController {
     @PostMapping("/{categoryId}")
     public ResponseEntity<Mdl_account> createStructure(@PathVariable(value = "categoryId") long categoryId, @RequestBody Mdl_account mdl_account) {
         System.out.println("All account: " + mdl_account.toString());
-        
         Mdl_account_category mdl_account_category = account_categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceAccessException("Not cateogry foudnd: " + categoryId));
         mdl_account.setMdl_account_category(mdl_account_category);
         

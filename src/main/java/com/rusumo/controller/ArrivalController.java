@@ -34,16 +34,16 @@ import org.springframework.web.client.ResourceAccessException;
 @RequestMapping("/rusumo_warehouses/api/arrival")
 @CrossOrigin("*")
 public class ArrivalController {
-    
+
     @Autowired
     ArrivalRepository arrivalRepository;
-    
+
     @Autowired
     EntryRepository entryRepository;
-    
+
     @Autowired
     ClientRepository clientRepository;
-    
+
     @ApiOperation("Getting all the Arrival only")
     @GetMapping("/")
     public ResponseEntity<List<Mdl_arrival>> getAll() {
@@ -54,24 +54,23 @@ public class ArrivalController {
         }
         return new ResponseEntity<>(struc, HttpStatus.OK);
     }
-    
+
     @ApiOperation("Creating an arrival notice")
     @PostMapping("/{clientId}/{entryId}")
     public ResponseEntity<Mdl_arrival> createStructure(@RequestBody @Valid Mdl_arrival mdl_arrival,
             @PathVariable(value = "clientId") Long clientId, @PathVariable(value = "entryId") long entryId) {
-        Mdl_client mdl_client = clientRepository.findById(clientId).orElseThrow(() -> new ResourceAccessException("Client with Id Not found: "+clientId));
+        Mdl_client mdl_client = clientRepository.findById(clientId).orElseThrow(() -> new ResourceAccessException("Client with Id Not found: " + clientId));
         Mdl_entry mdl_entry = entryRepository.findById(entryId).orElseThrow(() -> new ResourceAccessException(" Entry no Not found"));
         mdl_arrival.setMdl_client(mdl_client);
         mdl_arrival.setMdl_entry(mdl_entry);
         return new ResponseEntity<>(arrivalRepository.save(mdl_arrival), HttpStatus.CREATED);
     }
-    
+
     @PutMapping("/{id}/{entry_no}/{client_no}")
     @ApiOperation(value = "Updating  a single Structure")
     public ResponseEntity<Mdl_arrival> updateStructure(@PathVariable(value = "id") long id,
             @PathVariable(value = "entry_no") long entry_no, @PathVariable(value = "client_no") long client_no,
-            @RequestBody Mdl_arrival mdl_arrival
-    ) {
+            @RequestBody Mdl_arrival mdl_arrival) {
         //find the entryNo
         Mdl_entry mdl_entry = entryRepository.findById(entry_no).orElseThrow(() -> new ResourceAccessException("Entry Not found"));
         Mdl_client mdl_client = clientRepository.findById(client_no).orElseThrow(() -> new ResourceAccessException("Client Not found"));
@@ -79,17 +78,18 @@ public class ArrivalController {
         mdl_arrival1.setId(mdl_arrival.getId());
         mdl_arrival1.setMdl_entry(mdl_entry);
         mdl_arrival1.setMdl_client(mdl_client);
-        
+
         return new ResponseEntity<>(arrivalRepository.save(mdl_arrival), HttpStatus.OK);
-        
+
     }
-    
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteArrival(@PathVariable("id") long id
-    ) {
+    public ResponseEntity<HttpStatus> deleteArrival(@PathVariable("id") long id) {
         arrivalRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+   
 
 //    Adding more items at the same time
     @PostMapping("/multiarrival")
@@ -107,5 +107,5 @@ public class ArrivalController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-    
+
 }

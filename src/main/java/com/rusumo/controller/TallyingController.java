@@ -4,6 +4,7 @@ import com.rusumo.exception.ResourceNotFoundException;
 import com.rusumo.models.Mdl_tallying;
 import com.rusumo.DTO.MultipleTallyings;
 import com.rusumo.models.Mdl_arrival;
+import com.rusumo.print.controller.Commons;
 import com.rusumo.repository.ArrivalRepository;
 import com.rusumo.repository.TallyingRepository;
 import io.swagger.annotations.ApiOperation;
@@ -32,13 +33,13 @@ import org.springframework.web.client.ResourceAccessException;
 @RequestMapping("/rusumo_warehouses/api/tallying")
 @CrossOrigin("*")
 public class TallyingController {
-    
+
     @Autowired
     TallyingRepository tallyingRepository;
-    
+
     @Autowired
     ArrivalRepository arrivalRepository;
-    
+
     @ApiOperation("Getting all the Tallying only")
     @GetMapping("/")
     public ResponseEntity<List<Mdl_tallying>> getAll() {
@@ -49,13 +50,18 @@ public class TallyingController {
         }
         return new ResponseEntity<>(struc, HttpStatus.OK);
     }
-    
+
     @ApiOperation("Creating a Tally")
-    @PostMapping("/")
-    public ResponseEntity<Mdl_tallying> createStructure(@RequestBody @Valid Mdl_tallying mdl_tallying) {
+    @PostMapping("/{arrivalId}")
+    public ResponseEntity<Mdl_tallying> createStructure(@RequestBody @Valid Mdl_tallying mdl_tallying,
+            @PathVariable(value = "arrivalId") long arrivalId) {
+
+        Mdl_arrival mdl_arrival = arrivalRepository.findById(arrivalId).orElseThrow(() -> new ResourceAccessException("Arrival with id " + arrivalId + " Not found"));
+        mdl_tallying.setMdl_arrival(mdl_arrival);
+        mdl_tallying.setDate_time(new Commons().getCurrentDateTime());
         return new ResponseEntity<>(tallyingRepository.save(mdl_tallying), HttpStatus.CREATED);
     }
-    
+
     @PutMapping("/{id}/{arrivalId}")
     @ApiOperation(value = "Updating  a single Structure")
     public ResponseEntity<Mdl_tallying> updateStructure(@PathVariable(value = "id") long id, @PathVariable(value = "arrivalId") long arrivalId,
@@ -63,7 +69,7 @@ public class TallyingController {
         Mdl_tallying mdl_tallying1 = tallyingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Structure not found"));
         Mdl_arrival mdl_arrival = arrivalRepository.findById(id).orElseThrow(() -> new ResourceAccessException("Id Not found"));
-        
+
         mdl_tallying1.setId(mdl_tallying.getId());
         mdl_tallying1.setItem_name(mdl_tallying.getItem_name());
         mdl_tallying1.setQuantity(mdl_tallying.getQuantity());
@@ -73,9 +79,9 @@ public class TallyingController {
         mdl_tallying1.setMdl_arrival(mdl_tallying.getMdl_arrival());
         mdl_tallying1.setDescription(mdl_tallying.getDescription());
         return new ResponseEntity<>(tallyingRepository.save(mdl_tallying), HttpStatus.OK);
-        
+
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteTallying(@PathVariable("id") long id) {
         tallyingRepository.deleteById(id);
@@ -97,5 +103,5 @@ public class TallyingController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-    
+
 }

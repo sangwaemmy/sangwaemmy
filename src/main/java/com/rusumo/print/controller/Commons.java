@@ -18,4 +18,10 @@ public class Commons {
 
     DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
     String currentDateTime = dateFormatter.format(new Date());
+
+
+    DateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+    String currentDate= dateFormatter.format(new Date());
+
+
 }
