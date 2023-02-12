@@ -56,10 +56,7 @@ public class Mdl_inv_details implements Serializable {
     @Column(name = "stat_paid", length = 20, nullable = false)
     private String stat_paid;
 
-    @Size(min = 1, max = 20, message = " arrival_id should not be empty, null and or length exceed 30")
-    @Column(name = "arrival_id", length = 20, nullable = false)
-    private Integer arrival_id;
-
+   
     @Size(min = 1, max = 20, message = " description should not be empty, null and or length exceed 30")
     @Column(name = "description", length = 20, nullable = false)
     private String description;

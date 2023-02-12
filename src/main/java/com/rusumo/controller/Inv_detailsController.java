@@ -84,7 +84,6 @@ public class Inv_detailsController {
         mdl_inv_details1.setDate_time(mdl_inv_details.getDate_time());
         mdl_inv_details1.setStat_paid(mdl_inv_details.getStat_paid());
         mdl_inv_details1.setAccount_id(mdl_inv_details.getAccount_id());
-        mdl_inv_details1.setArrival_id(mdl_inv_details.getArrival_id());
         mdl_inv_details1.setDescription(mdl_inv_details.getDescription());
         return new ResponseEntity<>(inv_detailsRepository.save(mdl_inv_details), HttpStatus.OK);
 
