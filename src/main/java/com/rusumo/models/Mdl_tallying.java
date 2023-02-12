@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "tallying")
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mdl_tallying implements Serializable {
@@ -47,7 +47,6 @@ public class Mdl_tallying implements Serializable {
     private String account_id;
 
  
-//
     @ManyToOne
     @JoinColumn(name = "arriv_tallying")
     private Mdl_arrival mdl_arrival;

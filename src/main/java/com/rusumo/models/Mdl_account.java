@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "account")
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mdl_account implements Serializable {

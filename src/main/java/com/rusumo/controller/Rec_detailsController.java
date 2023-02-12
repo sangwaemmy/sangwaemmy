@@ -1,10 +1,12 @@
- 
 package com.rusumo.controller;
 
 import com.rusumo.exception.ResourceNotFoundException;
 import com.rusumo.models.Mdl_rec_details;
 import com.rusumo.DTO.MultipleRec_detailss;
-import com.rusumo.repository.Rec_detailsRepository;import io.swagger.annotations.ApiOperation;
+import com.rusumo.models.Mdl_receipt;
+import com.rusumo.repository.Rec_detailsRepository;
+import com.rusumo.repository.ReceiptRepository;
+import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.ResourceAccessException;
 
 /**
  *
@@ -33,9 +36,12 @@ public class Rec_detailsController {
     @Autowired
     Rec_detailsRepository rec_detailsRepository;
 
+    @Autowired
+    ReceiptRepository receiptRepository;
+
     @ApiOperation("Getting all the Rec_details only")
     @GetMapping("/")
-    public  ResponseEntity<List<Mdl_rec_details>> getAll() {
+    public ResponseEntity<List<Mdl_rec_details>> getAll() {
         List<Mdl_rec_details> struc = new ArrayList<>();
         rec_detailsRepository.findAll().forEach(struc::add);
         if (struc.isEmpty()) {
@@ -43,12 +49,14 @@ public class Rec_detailsController {
         }
         return new ResponseEntity<>(struc, HttpStatus.OK);
     }
+
     @ApiOperation("Creating a structure")
-    @PostMapping("/")
-    public ResponseEntity<Mdl_rec_details> createStructure(@RequestBody @Valid Mdl_rec_details mdl_rec_details) {
+    @PostMapping("/{receiptId}")
+    public ResponseEntity<Mdl_rec_details> createStructure(@PathVariable(value = "receiptId") long receiptId, @RequestBody @Valid Mdl_rec_details mdl_rec_details) {
+        Mdl_receipt mdl_receipt = receiptRepository.findById(receiptId).orElseThrow(() -> new ResourceAccessException("Id Not found"));
+        mdl_rec_details.setMdl_receipt(mdl_receipt);
         return new ResponseEntity<>(rec_detailsRepository.save(mdl_rec_details), HttpStatus.CREATED);
     }
-
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Updating  a single Structure")
@@ -58,7 +66,6 @@ public class Rec_detailsController {
         mdl_rec_details1.setId(mdl_rec_details.getId());
         mdl_rec_details1.setMod_pay(mdl_rec_details.getMod_pay());
         mdl_rec_details1.setAmt_paid(mdl_rec_details.getAmt_paid());
-        mdl_rec_details1.setReceipt_id(mdl_rec_details.getReceipt_id());
         mdl_rec_details1.setDescription(mdl_rec_details.getDescription());
         return new ResponseEntity<>(rec_detailsRepository.save(mdl_rec_details), HttpStatus.OK);
 
@@ -81,7 +88,7 @@ public class Rec_detailsController {
             ResponseEntity<String> responseEntity = new ResponseEntity<>("Saved", HttpStatus.OK);
             return responseEntity;
         } catch (Exception e) {
-            System.out.println("Error "  + e.toString());
+            System.out.println("Error " + e.toString());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

@@ -1,10 +1,12 @@
- 
 package com.rusumo.controller;
 
 import com.rusumo.exception.ResourceNotFoundException;
 import com.rusumo.models.Mdl_receipt;
 import com.rusumo.DTO.MultipleReceipts;
-import com.rusumo.repository.ReceiptRepository;import io.swagger.annotations.ApiOperation;
+import com.rusumo.models.Mdl_invoice;
+import com.rusumo.repository.InvoiceRepository;
+import com.rusumo.repository.ReceiptRepository;
+import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.ResourceAccessException;
 
 /**
  *
@@ -32,10 +35,12 @@ public class ReceiptController {
 
     @Autowired
     ReceiptRepository receiptRepository;
+    @Autowired
+    InvoiceRepository invoiceRepository;
 
     @ApiOperation("Getting all the Receipt only")
     @GetMapping("/")
-    public  ResponseEntity<List<Mdl_receipt>> getAll() {
+    public ResponseEntity<List<Mdl_receipt>> getAll() {
         List<Mdl_receipt> struc = new ArrayList<>();
         receiptRepository.findAll().forEach(struc::add);
         if (struc.isEmpty()) {
@@ -43,12 +48,14 @@ public class ReceiptController {
         }
         return new ResponseEntity<>(struc, HttpStatus.OK);
     }
+
     @ApiOperation("Creating a structure")
-    @PostMapping("/")
-    public ResponseEntity<Mdl_receipt> createStructure(@RequestBody @Valid Mdl_receipt mdl_receipt) {
+    @PostMapping("/{invoiceId}")
+    public ResponseEntity<Mdl_receipt> createStructure(@PathVariable(value = "invoiceId") long invoiceId ,@RequestBody @Valid Mdl_receipt mdl_receipt) {
+        Mdl_invoice mdl_invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new ResourceAccessException("Id Not found"));
+        mdl_receipt.setMdl_invoice(mdl_invoice);
         return new ResponseEntity<>(receiptRepository.save(mdl_receipt), HttpStatus.CREATED);
     }
-
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Updating  a single Structure")
@@ -57,7 +64,6 @@ public class ReceiptController {
                 .orElseThrow(() -> new ResourceNotFoundException("Structure not found"));
         mdl_receipt1.setId(mdl_receipt.getId());
         mdl_receipt1.setDate_time(mdl_receipt.getDate_time());
-        mdl_receipt1.setInvoice(mdl_receipt.getInvoice());
         return new ResponseEntity<>(receiptRepository.save(mdl_receipt), HttpStatus.OK);
 
     }
@@ -79,7 +85,7 @@ public class ReceiptController {
             ResponseEntity<String> responseEntity = new ResponseEntity<>("Saved", HttpStatus.OK);
             return responseEntity;
         } catch (Exception e) {
-            System.out.println("Error "  + e.toString());
+            System.out.println("Error " + e.toString());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

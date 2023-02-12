@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "profile")
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mdl_profile implements Serializable {
@@ -22,17 +22,16 @@ public class Mdl_profile implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
  
-
     @Size(min = 1, max = 20, message = " name should not be empty, null and or length exceed 30")
     @Column(name = "name", length = 20, nullable = false)
-    private Integer name;
+    private String name;
 
     @Size(min = 1, max = 20, message = " surname should not be empty, null and or length exceed 30")
     @Column(name = "surname", length = 20, nullable = false)
     private String surname;
 
-    @Size(min = 1, max = 20, message = " date_birth should not be empty, null and or length exceed 30")
-    @Column(name = "date_birth", length = 20, nullable = false)
+    @Size(min = 1, max = 30, message = " date_birth should not be empty, null and or length exceed 30")
+    @Column(name = "date_birth", length = 30, nullable = false)
     private Date date_birth;
 
     @Size(min = 1, max = 20, message = " gender should not be empty, null and or length exceed 30")

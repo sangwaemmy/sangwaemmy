@@ -4,6 +4,8 @@
  */
 package com.rusumo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,11 +13,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
@@ -23,7 +28,7 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "entry")
-@Data
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Mdl_entry {
@@ -76,7 +81,9 @@ public class Mdl_entry {
     @ManyToOne
     @JoinColumn(name = "client_entry")
     private Mdl_client mdl_client;
-    
-           
-    
+
+    @OneToMany(mappedBy = "mdl_entry")
+    @JsonIgnoreProperties("mdl_entry")
+    private List<Mdl_arrival> o_arriv;
+
 }

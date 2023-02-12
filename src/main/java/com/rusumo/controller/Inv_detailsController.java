@@ -3,7 +3,11 @@ package com.rusumo.controller;
 import com.rusumo.exception.ResourceNotFoundException;
 import com.rusumo.models.Mdl_inv_details;
 import com.rusumo.DTO.MultipleInv_detailss;
+import com.rusumo.models.Mdl_invoice;
+import com.rusumo.models.Mdl_tariff;
 import com.rusumo.repository.Inv_detailsRepository;
+import com.rusumo.repository.InvoiceRepository;
+import com.rusumo.repository.TariffRepository;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.ResourceAccessException;
 
 /**
  *
@@ -34,6 +39,12 @@ public class Inv_detailsController {
     @Autowired
     Inv_detailsRepository inv_detailsRepository;
 
+    @Autowired
+    InvoiceRepository invoiceRepository;
+
+    @Autowired
+    TariffRepository tariffRepository;
+
     @ApiOperation("Getting all the Inv_details only")
     @GetMapping("/")
     public ResponseEntity<List<Mdl_inv_details>> getAll() {
@@ -46,8 +57,14 @@ public class Inv_detailsController {
     }
 
     @ApiOperation("Creating a structure")
-    @PostMapping("/")
-    public ResponseEntity<Mdl_inv_details> createStructure(@RequestBody @Valid Mdl_inv_details mdl_inv_details) {
+    @PostMapping("/{invoiceId}/{tariffId}")
+    public ResponseEntity<Mdl_inv_details> createStructure(@PathVariable(value = "invoiceId") long invoiceId,
+            @PathVariable(value = "tariffId") long tariffId,
+            @RequestBody @Valid Mdl_inv_details mdl_inv_details) {
+        Mdl_invoice mdl_invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new ResourceAccessException("Id Not found"));
+        Mdl_tariff mdl_tariff = tariffRepository.findById(tariffId).orElseThrow(() -> new ResourceAccessException("Id Not found"));
+        mdl_inv_details.setMdl_invoice(mdl_invoice);
+        mdl_inv_details.setMdl_tariff(mdl_tariff);
         return new ResponseEntity<>(inv_detailsRepository.save(mdl_inv_details), HttpStatus.CREATED);
     }
 

@@ -4,14 +4,21 @@
  */
 package com.rusumo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
@@ -19,13 +26,13 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "tariff")
-@Data
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Mdl_tariff {
 
     @Id
-    @Size(min = 1, max = 18, message = " id should not be empty, null and or lengt exceed 30")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private long id;
 
@@ -36,5 +43,10 @@ public class Mdl_tariff {
     @Size(min = 1, max = 18, message = " max_days  should not be empty, null and or lengt exceed 30")
     @Column(name = "max_days", nullable = false)
     private String max_days;
+   
+    
+    @OneToMany(mappedBy = "mdl_tariff")
+    @JsonIgnoreProperties("mdl_tariff")
+    private List<Mdl_inv_details> o_invdetails;
 
 }

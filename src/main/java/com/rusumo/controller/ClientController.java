@@ -1,10 +1,10 @@
- 
 package com.rusumo.controller;
 
 import com.rusumo.exception.ResourceNotFoundException;
 import com.rusumo.models.Mdl_client;
 import com.rusumo.DTO.MultipleClients;
-import com.rusumo.repository.ClientRepository;import io.swagger.annotations.ApiOperation;
+import com.rusumo.repository.ClientRepository;
+import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
@@ -26,7 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author SANGWA Emmanuel code [CODEGURU - info@codeguru.com]
  */
 @RestController
-@RequestMapping("/rusumo_warehouses/api/client")@CrossOrigin("*")
+@RequestMapping("/rusumo_warehouses/api/client")
+@CrossOrigin("*")
 public class ClientController {
 
     @Autowired
@@ -34,7 +35,7 @@ public class ClientController {
 
     @ApiOperation("Getting all the Client only")
     @GetMapping("/")
-    public  ResponseEntity<List<Mdl_client>> getAll() {
+    public ResponseEntity<List<Mdl_client>> getAll() {
         List<Mdl_client> struc = new ArrayList<>();
         clientRepository.findAll().forEach(struc::add);
         if (struc.isEmpty()) {
@@ -42,12 +43,19 @@ public class ClientController {
         }
         return new ResponseEntity<>(struc, HttpStatus.OK);
     }
+
+    @ApiOperation("Getting a client by TIN")
+    @GetMapping("/{tin}")
+    public ResponseEntity<Mdl_client> getClientBytin(@PathVariable(value = "tin") String tin) {
+        Mdl_client client = clientRepository.findClientByTin(tin);
+        return new ResponseEntity<>(client, HttpStatus.OK);
+    }
+
     @ApiOperation("Creating a structure")
     @PostMapping("/")
     public ResponseEntity<Mdl_client> createStructure(@RequestBody @Valid Mdl_client mdl_client) {
         return new ResponseEntity<>(clientRepository.save(mdl_client), HttpStatus.CREATED);
     }
-
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Updating  a single Structure")
@@ -82,7 +90,7 @@ public class ClientController {
             ResponseEntity<String> responseEntity = new ResponseEntity<>("Saved", HttpStatus.OK);
             return responseEntity;
         } catch (Exception e) {
-            System.out.println("Error "  + e.toString());
+            System.out.println("Error " + e.toString());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

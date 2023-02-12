@@ -1,19 +1,17 @@
 package com.rusumo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "inv_details")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mdl_inv_details implements Serializable {
@@ -69,14 +67,14 @@ public class Mdl_inv_details implements Serializable {
     @Size(min = 1, max = 100, message = " account should not be empty, null and or length exceed 30")
     @Column(name = "account_id", length = 100, nullable = false)
     private String account_id;
-    
- 
+
     @ManyToOne
     @JoinColumn(name = "inv_invdetails")
+    @JsonIgnore
     private Mdl_invoice mdl_invoice;
-    
+
     @ManyToOne
     @JoinColumn(name = "tariff_id")
     private Mdl_tariff mdl_tariff;
-     
+
 }

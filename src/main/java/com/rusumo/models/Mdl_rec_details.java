@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "rec_details")
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mdl_rec_details implements Serializable {
@@ -30,10 +30,6 @@ public class Mdl_rec_details implements Serializable {
     @Column(name = "amt_paid", length = 20, nullable = false)
     private String amt_paid;
 
-    @Size(min = 1, max = 20, message = " receipt_id should not be empty, null and or length exceed 30")
-    @Column(name = "receipt_id", length = 20, nullable = false)
-    private Integer receipt_id;
-
     @Size(min = 1, max = 20, message = " description should not be empty, null and or length exceed 30")
     @Column(name = "description", length = 20, nullable = false)
     private String description;
@@ -41,7 +37,6 @@ public class Mdl_rec_details implements Serializable {
     @Size(min = 1, max = 100, message = " account_id should not be empty, null and or length exceed 30")
     @Column(name = "account_id", length = 100, nullable = false)
     private String account_id;
-
     
     @ManyToOne
     @JoinColumn(name = "rec_recdetails")

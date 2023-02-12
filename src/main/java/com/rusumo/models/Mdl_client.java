@@ -1,5 +1,6 @@
 package com.rusumo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "client")
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mdl_client implements Serializable {
@@ -45,13 +46,15 @@ public class Mdl_client implements Serializable {
     @Size(min = 1, max = 20, message = " dateTime should not be empty, null and or length exceed 30")
     @Column(name = "dateTime", length = 20, nullable = false)
     private String dateTime;
-    
+
     @Size(min = 1, max = 100, message = " account_id should not be empty, null and or length exceed 30")
     @Column(name = "account_id", length = 100, nullable = false)
     private String account_id;
+    
+    @OneToMany(mappedBy = "mdl_client")
+    @JsonIgnoreProperties("mdl_client")
+    private List<Mdl_entry> o_entries;
 
 
- 
-   
 
 }

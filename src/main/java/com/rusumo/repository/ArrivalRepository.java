@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.Query;
 @Repository
 public interface ArrivalRepository extends JpaRepository<Mdl_arrival, Long> {
 
-   
+    
 }
