@@ -9,9 +9,12 @@ import com.rusumo.repository.Inv_detailsRepository;
 import com.rusumo.repository.InvoiceRepository;
 import com.rusumo.repository.TariffRepository;
 import io.swagger.annotations.ApiOperation;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +48,8 @@ public class Inv_detailsController {
     @Autowired
     TariffRepository tariffRepository;
 
+   
+    
     @ApiOperation("Getting all the Inv_details only")
     @GetMapping("/")
     public ResponseEntity<List<Mdl_inv_details>> getAll() {
