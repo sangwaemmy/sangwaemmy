@@ -44,6 +44,12 @@ public class AccountCategoryController {
         return new ResponseEntity<>(struc, HttpStatus.OK);
     }
 
+    @ApiOperation("Total categries")
+    @GetMapping("/count")
+    public long countAll() {
+        return account_categoryRepository.count();
+    }
+
     @ApiOperation("Creating a structure")
     @PostMapping("/")
     public ResponseEntity<Mdl_account_category> createStructure(@RequestBody @Valid Mdl_account_category mdl_account_category) {
